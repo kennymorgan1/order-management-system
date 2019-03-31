@@ -4,9 +4,9 @@
   "description": "A simple order management system",
   "main": "index.js",
   "scripts": {
-    "build": "babel --out-dir dist src/server.js",
-    "start": "npm run build && node dist/src/server.js",
-    "dev": "npm run build && nodemon dist/src/server.js",
+    "build": "babel --out-dir dist src",
+    "start": "npm run build && node dist/server.js",
+    "dev": "npm run build && nodemon dist/server.js",
     "lint": "eslint server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
