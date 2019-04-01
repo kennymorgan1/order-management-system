@@ -1,12 +1,12 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import Product from '../models/products';
+import Order from '../models/order';
 
 
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  Product.find().then((result) => {
+  Order.find().populate('product', 'name').then()((result) => {
     if (!result) {
       return res.status(404).json({
         status: 404,
@@ -26,12 +26,12 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  const product = new Product({
+  const order = new Order({
     _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    price: req.body.price,
+    product: req.body.product,
+    quantity: req.body.quantity,
   });
-  product.save().then((result) => {
+  order.save().then((result) => {
     return res.status(201).json({
       status: 201,
       data: result,
@@ -45,7 +45,7 @@ router.post('/', (req, res) => {
 });
 
 router.get('/:producctId', (req, res) => {
-  Product.findById({ id: req.params.productId }).then((result) => {
+  Order.findById({ id: req.params.OrderId }).populate('product').then((result) => {
     if (!result) {
       return res.status(404).json({
         status: 404,
@@ -64,9 +64,9 @@ router.get('/:producctId', (req, res) => {
   });
 });
 
-router.patch('/:product', (req, res) => {
+router.patch('/:Order', (req, res) => {
   let existingRecord;
-  Product.findByIdAndUpdate({ _id: req.params.productId }).then((result) => {
+  Order.findByIdAndUpdate({ _id: req.params.OrderId }).then((result) => {
     if (result) {
       existingRecord = result;
     }
@@ -77,8 +77,8 @@ router.patch('/:product', (req, res) => {
     });
   });
 
-  existingRecord.name = req.body.name;
-  existingRecord.price = req.body.price;
+  existingRecord.product = req.body.product;
+  existingRecord.quantity = req.body.quantity;
 
   existingRecord.save().then((result) => {
     if (!result) {
@@ -99,8 +99,8 @@ router.patch('/:product', (req, res) => {
   });
 });
 
-router.delete('/:productId', (req, res) => {
-  Product.findByIdAndDelete({ _id: req.params.productId }).then((result) => {
+router.delete('/:OrderId', (req, res) => {
+  Order.findByIdAndDelete({ _id: req.params.OrderId }).then((result) => {
     return res.status(204).json({
       status: 204,
       data: result,
