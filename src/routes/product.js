@@ -1,18 +1,18 @@
 import express from 'express';
-import checkAuth from '../middleware/check_auth';
+import User from '../middleware/check_auth';
 import ProductController from '../controllers/product';
 
 
 const router = express.Router();
 
-router.get('/', ProductController.getAllProducts);
+router.get('/', User.checkAuth, ProductController.getAllProducts);
 
-router.post('/', checkAuth, ProductController.createProduct);
+router.post('/', User.checkAuth, ProductController.createProduct);
 
 router.get('/:producctId', ProductController.getOneProduct);
 
-router.patch('/:productId', checkAuth, ProductController.updateProduct);
+router.patch('/:productId', User.checkAuth, ProductController.updateProduct);
 
-router.delete('/:productId', checkAuth, ProductController.deleteProduct);
+router.delete('/:productId', User.checkAuth, ProductController.deleteProduct);
 
 export default router;

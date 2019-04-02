@@ -2,9 +2,10 @@ import mongoose from 'mongoose';
 import Product from '../models/products';
 
 
-export default class ProductController {
-  static async getAllProducts(req, res) {
-    Product.find().then((result) => {
+const ProductController = {
+  async getAllProducts(req, res) {
+    const result = await Product.find();
+    try {
       if (!result) {
         return res.status(404).json({
           status: 404,
@@ -15,13 +16,15 @@ export default class ProductController {
         status: 200,
         data: result,
       });
-    }).catch(err => res.status(500).json({
-      status: 500,
-      data: err,
-    }));
-  }
+    } catch (err) {
+      return res.status(500).json({
+        status: 500,
+        data: err,
+      });
+    }
+  },
 
-  static async createProduct(req, res) {
+  async createProduct(req, res) {
     const product = new Product({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
@@ -34,9 +37,9 @@ export default class ProductController {
       status: 500,
       data: err,
     }));
-  }
+  },
 
-  static async getOneProduct(req, res) {
+  async getOneProduct(req, res) {
     Product.findById({ id: req.params.productId }).then((result) => {
       if (!result) {
         return res.status(404).json({
@@ -52,20 +55,10 @@ export default class ProductController {
       status: 500,
       error: err,
     }));
-  }
+  },
 
-  static async updateProduct(req, res) {
-    let existingRecord;
-    Product.findByIdAndUpdate({ _id: req.params.productId }).then((result) => {
-      if (result) {
-        existingRecord = result;
-      }
-    }).catch((err) => {
-      res.status(500).json({
-        status: 500,
-        error: err,
-      });
-    });
+  async updateProduct(req, res) {
+    const existingRecord = await Product.findByIdAndUpdate({ _id: req.params.productId });
 
     existingRecord.name = req.body.name;
     existingRecord.price = req.body.price;
@@ -85,15 +78,17 @@ export default class ProductController {
       status: 500,
       error: err,
     }));
-  }
+  },
 
-  static async deleteProduct(req, res) {
+  async deleteProduct(req, res) {
     Product.findByIdAndDelete({ _id: req.params.productId }).then(result => res.status(204).json({
-      status: 204,
+      status: 200,
       data: result,
     })).catch(err => res.status(500).json({
       status: 500,
       error: err,
     }));
-  }
-}
+  },
+};
+
+export default ProductController;

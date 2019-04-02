@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import User from '../models/user';
 
 export default class UserController {
-  static async createUser(req, res) {
+  static createUser(req, res) {
     User.find({ email: req.body.email }).then((users) => {
       if (users.length >= 1) {
         res.status(409).json({
@@ -37,17 +37,17 @@ export default class UserController {
     });
   }
 
-  static async loginUser(req, res) {
+  static loginUser(req, res) {
     User.find({ email: req.body.email }).then((user) => {
       if (user.length < 1) {
-        res.send(401).json({
+        return res.send(401).json({
           status: 401,
           message: 'Auth failed',
         });
       }
       bcrypt.compare(req.body.password, user[0].password, (err, result) => {
         if (err) {
-          res.send(401).json({
+          return res.send(401).json({
             status: 401,
             message: 'Auth failed',
           });
@@ -62,14 +62,14 @@ export default class UserController {
           {
             expiresIn: '1h',
           });
-          res.status(200).json({
+          return res.status(200).json({
             status: 200,
             message: 'Auth successful',
             token,
             data: result,
           });
         }
-        res.send(401).json({
+        return res.send(401).json({
           status: 401,
           message: 'Auth failed',
         });
@@ -77,7 +77,7 @@ export default class UserController {
     });
   }
 
-  static async deleteUser(req, res) {
+  static deleteUser(req, res) {
     User.findByIdAndDelete({ _id: req.params.userId }).then(result => res.status(204).json({
       status: 204,
       message: 'user deleted',

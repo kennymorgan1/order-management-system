@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import chalk from 'chalk';
 import mongoose from 'mongoose';
+import 'babel-polyfill';
 import productRoutes from './routes/product';
 import orderRoutes from './routes/order';
 import userRoutes from './routes/user';
@@ -29,6 +30,11 @@ app.get('/', (req, res) => {
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/users', userRoutes);
+
+app.use('*', (req, res) => res.status(404).json({
+  status: 404,
+  error: 'Page not found',
+}));
 
 const port = process.env.PORT || 4000;
 
