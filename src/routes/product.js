@@ -1,5 +1,6 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import checkAuth from '../middleware/check_auth';
 import Product from '../models/products';
 
 
@@ -25,7 +26,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.post('/', (req, res) => {
+router.post('/', checkAuth, (req, res) => {
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     name: req.body.name,
@@ -64,7 +65,7 @@ router.get('/:producctId', (req, res) => {
   });
 });
 
-router.patch('/:product', (req, res) => {
+router.patch('/:product', checkAuth, (req, res) => {
   let existingRecord;
   Product.findByIdAndUpdate({ _id: req.params.productId }).then((result) => {
     if (result) {
@@ -99,7 +100,7 @@ router.patch('/:product', (req, res) => {
   });
 });
 
-router.delete('/:productId', (req, res) => {
+router.delete('/:productId', checkAuth, (req, res) => {
   Product.findByIdAndDelete({ _id: req.params.productId }).then((result) => {
     return res.status(204).json({
       status: 204,

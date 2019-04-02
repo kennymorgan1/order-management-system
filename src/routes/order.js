@@ -1,11 +1,12 @@
 import express from 'express';
 import mongoose from 'mongoose';
+import checkAuth from '../middleware/check_auth';
 import Order from '../models/order';
 
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/', checkAuth, (req, res) => {
   Order.find().populate('product', 'name').then()((result) => {
     if (!result) {
       return res.status(404).json({
@@ -25,7 +26,7 @@ router.get('/', (req, res) => {
   });
 });
 
-router.post('/', (req, res) => {
+router.post('/', checkAuth, (req, res) => {
   const order = new Order({
     _id: new mongoose.Types.ObjectId(),
     product: req.body.product,
@@ -44,7 +45,7 @@ router.post('/', (req, res) => {
   });
 });
 
-router.get('/:producctId', (req, res) => {
+router.get('/:producctId', checkAuth, (req, res) => {
   Order.findById({ id: req.params.OrderId }).populate('product').then((result) => {
     if (!result) {
       return res.status(404).json({
@@ -64,7 +65,7 @@ router.get('/:producctId', (req, res) => {
   });
 });
 
-router.patch('/:Order', (req, res) => {
+router.patch('/:Order', checkAuth, (req, res) => {
   let existingRecord;
   Order.findByIdAndUpdate({ _id: req.params.OrderId }).then((result) => {
     if (result) {
@@ -99,7 +100,7 @@ router.patch('/:Order', (req, res) => {
   });
 });
 
-router.delete('/:OrderId', (req, res) => {
+router.delete('/:OrderId', checkAuth, (req, res) => {
   Order.findByIdAndDelete({ _id: req.params.OrderId }).then((result) => {
     return res.status(204).json({
       status: 204,

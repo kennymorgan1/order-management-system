@@ -6,6 +6,7 @@ import chalk from 'chalk';
 import mongoose from 'mongoose';
 import productRoutes from './routes/product';
 import orderRoutes from './routes/order';
+import userRoutes from './routes/user';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/orders', orderRoutes);
+app.use('/api/v1/users', userRoutes);
 
 const port = process.env.PORT || 4000;
 
