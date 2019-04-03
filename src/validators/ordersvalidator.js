@@ -8,13 +8,12 @@ export default class OrderValidation {
     });
 
     // eslint-disable-next-line consistent-return
-    Joi.validate(req.body, schema, (err, value) => {
+    Joi.validate(req.body, schema, (err) => {
       if (err) {
         console.log(err.message);
         return res.status(400).json({
           status: 400,
-          err,
-          value,
+          error: err.message,
         });
       }
       next();

@@ -16,7 +16,6 @@ export default class UserValidation {
     // eslint-disable-next-line consistent-return
     Joi.validate(req.body, schema, (err) => {
       if (err) {
-        console.log(err.value);
         return res.status(400).json({
           status: 400,
           err: err.message,

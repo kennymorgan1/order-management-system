@@ -8,12 +8,11 @@ export default class ProductValidation {
       price: Joi.number().required().error(new Error('price should be a number')),
     });
 
-    Joi.validate(req.body, schema, (err, value) => {
+    Joi.validate(req.body, schema, (err) => {
       if (err) {
         res.status(400).json({
           status: 400,
-          err,
-          value,
+          err: err.message,
         });
       }
       next();
