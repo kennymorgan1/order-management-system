@@ -20,6 +20,8 @@ export default class UserController {
           } else {
             const user = new User({
               _id: new mongoose.Types.ObjectId(),
+              firstName: req.body.firstName,
+              lastName: req.body.lastName,
               email: req.body.email,
               password: hash,
             });
@@ -38,6 +40,7 @@ export default class UserController {
   }
 
   static loginUser(req, res) {
+    // eslint-disable-next-line consistent-return
     User.find({ email: req.body.email }).then((user) => {
       if (user.length < 1) {
         return res.send(401).json({
