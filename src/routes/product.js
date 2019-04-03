@@ -1,116 +1,18 @@
 import express from 'express';
-import mongoose from 'mongoose';
-import Product from '../models/products';
+import User from '../middleware/check_auth';
+import ProductController from '../controllers/product';
 
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  Product.find((result) => {
-    if (!result) {
-      return res.status(404).json({
-        status: 404,
-        message: 'Not found',
-      });
-    }
-    return res.status(200).json({
-      status: 200,
-      data: result,
-    });
-  }).catch((err) => {
-    return res.status(500).json({
-      status: 500,
-      data: err,
-    });
-  });
-});
+router.get('/', User.checkAuth, ProductController.getAllProducts);
 
-router.post('/', (req, res) => {
-  const product = new Product({
-    _id: new mongoose.Types.ObjectId(),
-    name: req.body.name,
-    price: req.body.price,
-  });
-  product.save().then((result) => {
-    return res.status(201).json({
-      status: 201,
-      data: result,
-    });
-  }).catch((err) => {
-    return res.status(500).json({
-      status: 500,
-      data: err,
-    });
-  });
-});
+router.post('/', User.checkAuth, ProductController.createProduct);
 
-router.get('/:producctId', (req, res) => {
-  Product.findById({ id: req.params.productId }).then((result) => {
-    if (!result) {
-      return res.status(404).json({
-        status: 404,
-        message: 'Not found',
-      });
-    }
-    return res.status(200).json({
-      status: 200,
-      data: result,
-    });
-  }).catch((err) => {
-    return res.status(500).json({
-      status: 500,
-      error: err,
-    });
-  });
-});
+router.get('/:producctId', ProductController.getOneProduct);
 
-router.patch('/:product', (req, res) => {
-  let existingRecord;
-  Product.findByIdAndUpdate({ _id: req.params.productId }).then((result) => {
-    if (result) {
-      existingRecord = result;
-    }
-  }).catch((err) => {
-    res.status(500).json({
-      status: 500,
-      error: err,
-    });
-  });
+router.patch('/:productId', User.checkAuth, ProductController.updateProduct);
 
-  existingRecord.name = req.body.name;
-  existingRecord.price = req.body.price;
-
-  existingRecord.save().then((result) => {
-    if (!result) {
-      return res.status(404).json({
-        status: 404,
-        message: 'Not found',
-      });
-    }
-    return res.status(200).json({
-      status: 200,
-      data: result,
-    });
-  }).catch((err) => {
-    return res.status(500).json({
-      status: 500,
-      error: err,
-    });
-  });
-});
-
-router.delete('/:productId', (req, res) => {
-  Product.findByIdAndDelete({ _id: req.params.productId }).then((result) => {
-    return res.status(204).json({
-      status: 204,
-      data: result,
-    });
-  }).catch((err) => {
-    return res.status(500).json({
-      status: 500,
-      error: err,
-    });
-  });
-});
+router.delete('/:productId', User.checkAuth, ProductController.deleteProduct);
 
 export default router;
