@@ -4,10 +4,12 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import chalk from 'chalk';
 import mongoose from 'mongoose';
+import swaggerUi from 'swagger-ui-express';
 import 'babel-polyfill';
 import productRoutes from './routes/product';
 import orderRoutes from './routes/order';
 import userRoutes from './routes/user';
+import swaggerDocument from '../swagger.json';
 
 dotenv.config();
 const app = express();
@@ -31,6 +33,8 @@ app.get('/', (req, res) => {
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/orders', orderRoutes);
 app.use('/api/v1/users', userRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use('*', (req, res) => res.status(404).json({
   status: 404,
