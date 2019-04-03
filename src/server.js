@@ -38,6 +38,10 @@ app.use('*', (req, res) => res.status(404).json({
 
 const port = process.env.PORT || 4000;
 
-app.listen(port, () => {
-  console.log(chalk.default.yellow.bgBlack.bold(`listening on port ${port}....`));
-});
+if (!module.parent) {
+  app.listen(port, () => {
+    console.log(chalk.default.yellow.bgBlack.bold(`listening on port ${port}....`));
+  });
+}
+
+export default app;

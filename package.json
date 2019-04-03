@@ -8,7 +8,7 @@
     "start": "npm run build && node dist/server.js",
     "dev": "npm run build && nodemon dist/server.js",
     "lint": "eslint server",
-    "test": "cross-env NODE_ENV=test nyc mocha server/test.js --exit || true",
+    "test": "cross-env NODE_ENV=test mocha src/test/**/*.js --require babel-register --timeout 20000 --exit",
     "report-coverage": "cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
