@@ -10,17 +10,16 @@ export default class UserValidation {
       email: Joi.string().email().required().lowercase()
         .error(new Error('Incorrect email supplied')),
       password: Joi.string().min(7).required().error(new Error('Password must be longer than 7 characters')),
-      confirmPassword: Joi.valid(Joi.ref('password')).required().error(new Error('Does not match password')),
+      confirmPassword: Joi.valid(Joi.ref('password')).required().error(new Error('Password does not match')),
     });
 
     // eslint-disable-next-line consistent-return
-    Joi.validate(req.body, schema, (err, value) => {
+    Joi.validate(req.body, schema, (err) => {
       if (err) {
-        console.log(err.message);
+        console.log(err.value);
         return res.status(400).json({
           status: 400,
-          err,
-          value,
+          err: err.message,
         });
       }
       next();

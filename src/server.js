@@ -14,7 +14,8 @@ const app = express();
 
 mongoose.set('useCreateIndex', true);
 mongoose.set('useNewUrlParser', true);
-mongoose.connect(`mongodb://${process.env.MONGODB_HOST}${process.env.DB_NAME}`);
+// mongoose.connect(`mongodb://${process.env.MONGODB_HOST}${process.env.DB_NAME}`);
+mongoose.connect(`mongodb://${process.env.MONGODB_CONNECTION}@ds123635.mlab.com:23635/order_api`);
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
